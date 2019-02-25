@@ -1,30 +1,34 @@
 CROSSCOMPILE := 
 
-CFLAGS 	:= -Wall -O2 -c
+AS  = $(CROSSCOMPILE)as
+LD 	= $(CROSSCOMPILE)ld
+CC 	= $(CROSSCOMPILE)gcc
+CPP = $(CC) -E
+AR  = $(CROSSCOMPILE)ar
+NM  = $(CROSSCOMPILE)nm
+
+STRIP 		= $(CROSSCOMPILE)strip
+OBJCOPY		= $(CROSSCOMPILE)objcopy
+OBJDUMP 	= $(CROSSCOMPILE)objdump
+
+CFLAGS 	:= -Wall -O2 -g 
 CFLAGS  += -I$(PWD)/include -I/usr/include/freetype2
 
-LDFLAGS := -lm -lfreetype
+LDFLAGS := -lm -lfreetype -lvga -lvgagl
 
-CC 	:= $(CROSSCOMPILE)gcc
-LD 	:= $(CROSSCOMPILE)ld
+TOPDIR := $(shell pwd)
 
-OBJS := main.o \
-			display/disp_manager.o        \
-			display/fb.o                  \
-			display/crt.o                  \
-			encoding/ascii.o              \
-			encoding/utf-16be.o           \
-			encoding/encoding_manager.o   \
-			encoding/utf-8.o              \
-			encoding/utf-16le.o           \
-			draw/draw.o                   \
-			fonts/ascii.o                 \
-			fonts/gbk.o                   \
-			fonts/freetype.o              \
-			fonts/fonts_manager.o
+export AS LD CC CPP AR NM
+export STRIP OBJCOPU OBJDUMP
+export CFLAGS LDFLAGS
+export TOPDIR
 
-all: $(OBJS)
-	$(CC) $(LDFLAGS) -o show_file $^ -lvga -lvgagl
+TARGET := show_file
+
+
+
+all: 
+	$(CC) $(LDFLAGS) -o $(TARGET) built-in.o  
 
 clean:
 	rm -f show_file
