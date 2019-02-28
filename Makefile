@@ -12,7 +12,7 @@ OBJCOPY		= $(CROSSCOMPILE)objcopy
 OBJDUMP 	= $(CROSSCOMPILE)objdump
 
 CFLAGS 	:= -Wall -O2 -g 
-CFLAGS  += -I$(PWD)/include -I/usr/include/freetype2
+CFLAGS  += -I$(PWD)/include -I/usr/local/include/freetype2
 
 LDFLAGS := -lm -lfreetype -lvga -lvgagl
 
@@ -26,14 +26,22 @@ export TOPDIR
 TARGET := show_file
 
 
+obj-y += main.o
+obj-y += display/
+obj-y += draw/
+obj-y += encoding/
+obj-y += fonts/
 
 all: 
+	make -C ./ -f $(TOPDIR)/Makefile.build
 	$(CC) $(LDFLAGS) -o $(TARGET) built-in.o  
 
 clean:
-	rm -f show_file
-	rm -f $(OBJS)
+	rm -f $(shell find -name "*.o")
+	rm -f $(TARGET)
 
-%.o:%.c
-	$(CC) $(CFLAGS) -o $@ $<
+distclean:
+	rm -f $(shell find -name "*.o")
+	rm -f $(shell find -name "*.d")
+	rm -f $(TARGET)
 
